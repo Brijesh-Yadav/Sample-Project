@@ -1,10 +1,18 @@
 package com.projectname.utils;
 
-import java.net.MalformedURLException;
+import java.io.File;
 import java.net.URL;
+import java.util.logging.Level;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerDriverService;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -13,50 +21,52 @@ public class BaseClass {
 	protected static WebDriver driver = null ;
 	protected static ThreadLocal<RemoteWebDriver> threadDriver = null;
 	
+	public static void launch_browser(){
+		if("remote".equalsIgnoreCase(Constants.driverName)){
+			initialize_remoteDriver();
+		}else {
+			initialize_webDriver();
+		}
+	}
+	
 	public static void initialize_webDriver(){
 		
 		if("firefox".equalsIgnoreCase(Constants.browserName)){
 			driver = fireFox();
-			
 		}else if("chrome".equalsIgnoreCase(Constants.browserName)){
 			driver = chrome();
-			
 		}else if("ie".equalsIgnoreCase(Constants.browserName)){
 			driver = ie();
-			
 		}else {
 			System.out.println("Browser instance not found");
 		}
 	}
 	
-	public static void initialize_remoteDriver()  throws MalformedURLException {
-		threadDriver = new ThreadLocal<RemoteWebDriver>();
-		DesiredCapabilities dc = new DesiredCapabilities();
+	public static void initialize_remoteDriver(){
 		
-		
-		if("firefox".equalsIgnoreCase(Constants.browserName)){
-			
-			FirefoxProfile fp = new FirefoxProfile();
-			dc.setCapability(FirefoxDriver.PROFILE, fp);
-			dc.setBrowserName(DesiredCapabilities.firefox().getBrowserName());
+		try{
+			threadDriver = new ThreadLocal<RemoteWebDriver>();
+			DesiredCapabilities dc = new DesiredCapabilities();
+			//set firefox browsers
+			if("firefox".equalsIgnoreCase(Constants.browserName)){
+				dc = return_DesiredCapabilities_firefox();
 				
-		}else if("chrome".equalsIgnoreCase(Constants.browserName)){
-			
-			dc.setJavascriptEnabled(true);
-			System.setProperty("webdriver.chrome.driver", "/Users/xxxxx/chromedriver");
-			dc = DesiredCapabilities.chrome();
-			
-		}else if("ie".equalsIgnoreCase(Constants.browserName)){
+			//set chrome browser	
+			}else if("chrome".equalsIgnoreCase(Constants.browserName)){
+				System.setProperty("webdriver.chrome.driver", Constants.chrome_driver);
+				dc = return_DesiredCapabilities_chrome();
+			//set Internet Explorer browser	
+			}else if("ie".equalsIgnoreCase(Constants.browserName)){
+				System.setProperty("webdriver.ie.driver", Constants.ie_driver);
+				dc = return_DesiredCapabilities_ie();
+			}else {
+				System.out.println("Browser instance not found");
+			}
+			threadDriver.set(new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), dc));
 
-			dc.setJavascriptEnabled(true);
-			System.setProperty("webdriver.ie.driver", "/Users/xxxxx/chromedriver");
-			dc = DesiredCapabilities.internetExplorer();
-			
-		}else {
-			System.out.println("Browser instance not found");
+		}catch(Exception e){
+			e.printStackTrace();
 		}
-		
-		threadDriver.set(new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), dc));
 	}
 	
 	public static WebDriver getDriver() {
@@ -70,22 +80,73 @@ public class BaseClass {
 	}	 
 	
 	public static WebDriver fireFox(){
+		if("custom".equalsIgnoreCase(Constants.firefox)){
+			File firefox_file = new File(Constants.firefox_custom_path);
+			FirefoxBinary binary = new FirefoxBinary(firefox_file);
+			FirefoxProfile ffox_profile = new FirefoxProfile();
+			driver = new FirefoxDriver(binary,ffox_profile);
+		}else {
+			DesiredCapabilities caps = return_DesiredCapabilities_firefox();
+			driver = new FirefoxDriver(caps);
+		}
+		driver.manage().window().maximize();
+		driver.get(Constants.url);
 		return driver;
 	}
 	
 	public static WebDriver chrome(){
+		System.setProperty("webdriver.chrome.driver",Constants.chrome_driver);
+		DesiredCapabilities caps = return_DesiredCapabilities_chrome();
+		driver = new ChromeDriver(caps);
+		driver.manage().window().maximize();
+		driver.get(Constants.url);
 		return driver;
 	}
 	
 	public static WebDriver ie(){
+		System.setProperty(InternetExplorerDriverService.IE_DRIVER_EXE_PROPERTY,Constants.ie_driver);
+		DesiredCapabilities capab = return_DesiredCapabilities_ie();
+		driver = new InternetExplorerDriver(capab);
+		driver.manage().deleteAllCookies();
+		driver.get(Constants.url);
 		return driver;
 	}
+
+	public static DesiredCapabilities return_DesiredCapabilities_firefox(){
+		DesiredCapabilities cap = DesiredCapabilities.firefox();
+		cap.setJavascriptEnabled(true);
+		FirefoxProfile fp = new FirefoxProfile();
+		cap.setCapability(FirefoxDriver.PROFILE, fp);
+		cap.setBrowserName(cap.getBrowserName());
+		return cap;
+	}
 	
+	public static DesiredCapabilities return_DesiredCapabilities_ie(){
+		DesiredCapabilities cap = DesiredCapabilities.internetExplorer();
+		cap.setJavascriptEnabled(true);
+		cap.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true); 
+		cap.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
+		cap.setCapability("ignoreZoomSetting", true);
+		cap.setCapability("nativeEvents",false);
+		cap.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+		return cap;
+	}
+	
+	public static DesiredCapabilities return_DesiredCapabilities_chrome(){
+		DesiredCapabilities caps = DesiredCapabilities.chrome();
+		caps.setJavascriptEnabled(true);
+        LoggingPreferences logPrefs = new LoggingPreferences();
+        logPrefs.enable(LogType.BROWSER, Level.ALL);
+        caps.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
+        return caps;
+	}
+
 	public static void closeBrowser(){
-		driver.close();
+		getDriver().close();
 	}
 	
 	public static void quitBrowser(){
-		driver.quit();
+		getDriver().quit();
 	}
+	
 }
