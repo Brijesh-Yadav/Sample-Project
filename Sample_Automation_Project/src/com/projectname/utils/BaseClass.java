@@ -27,10 +27,11 @@ public class BaseClass {
 		}else {
 			initialize_webDriver();
 		}
+		Logger.info(Constants.browserName+" browser is launched!!");
 	}
 	
 	public static void initialize_webDriver(){
-		
+		boolean flag = true;
 		if("firefox".equalsIgnoreCase(Constants.browserName)){
 			driver = fireFox();
 		}else if("chrome".equalsIgnoreCase(Constants.browserName)){
@@ -38,19 +39,23 @@ public class BaseClass {
 		}else if("ie".equalsIgnoreCase(Constants.browserName)){
 			driver = ie();
 		}else {
-			System.out.println("Browser instance not found");
+			flag=false;
+			Logger.warn("Browser instance not found");
+		}
+		if(flag!=false){
+			Logger.info("WebDriver is initialized!!");
 		}
 	}
 	
 	public static void initialize_remoteDriver(){
 		
 		try{
+			boolean flag = true;
 			threadDriver = new ThreadLocal<RemoteWebDriver>();
 			DesiredCapabilities dc = new DesiredCapabilities();
 			//set firefox browsers
 			if("firefox".equalsIgnoreCase(Constants.browserName)){
 				dc = return_DesiredCapabilities_firefox();
-				
 			//set chrome browser	
 			}else if("chrome".equalsIgnoreCase(Constants.browserName)){
 				System.setProperty("webdriver.chrome.driver", Constants.chrome_driver);
@@ -60,23 +65,33 @@ public class BaseClass {
 				System.setProperty("webdriver.ie.driver", Constants.ie_driver);
 				dc = return_DesiredCapabilities_ie();
 			}else {
-				System.out.println("Browser instance not found");
+				Logger.warn("Browser instance not found");
 			}
+			
 			threadDriver.set(new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), dc));
-
+			
+			if(getDriver()!=null){
+				getDriver().manage().window().maximize();
+				getDriver().get(Constants.url);
+			}else {
+				flag = false;
+			}
+			
+			if(flag!=false){
+				Logger.info("Remote WebDriver is initialized!!");
+			}
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 	}
 	
 	public static WebDriver getDriver() {
-		
 		if("remote".equalsIgnoreCase(Constants.driverName)){
 			return threadDriver.get();	
 		}else {
 			return driver;
 		}
-		
 	}	 
 	
 	public static WebDriver fireFox(){
@@ -143,10 +158,12 @@ public class BaseClass {
 
 	public static void closeBrowser(){
 		getDriver().close();
+		Logger.info(Constants.browserName+" browser window has been closed!!");
 	}
 	
 	public static void quitBrowser(){
 		getDriver().quit();
+		Logger.info(Constants.browserName+" browser has been quit!!");
 	}
 	
 }

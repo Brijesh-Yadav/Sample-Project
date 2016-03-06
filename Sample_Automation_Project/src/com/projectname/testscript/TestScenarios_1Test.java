@@ -11,6 +11,7 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.AfterSuite;
 
 public class TestScenarios_1Test {
+
   @BeforeMethod
   public void beforeMethod() {
   }
@@ -42,7 +43,6 @@ public class TestScenarios_1Test {
   @AfterSuite
   public void afterSuite() {
   }
-
 
   @Test
   public void method() {

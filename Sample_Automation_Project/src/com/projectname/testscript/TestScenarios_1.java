@@ -1,21 +1,17 @@
 package com.projectname.testscript;
 
 import org.testng.annotations.Test;
-import com.projectname.utils.Logger;
+import com.projectname.modularaction.ActionClass;
+import com.projectname.utils.BaseClass;
 
 public class TestScenarios_1 {
 	
 	@Test
-	public void method() throws InterruptedException{
-		Logger.info("This is test logger");
-		Thread.sleep(1000);
-		Logger.info("This is test logger");
-		Thread.sleep(1000);
-		Logger.info("This is test logger");
-		Thread.sleep(1000);
-		Logger.info("This is test logger");
-		Thread.sleep(1000);
-		Logger.info("This is test logger");
+	public void method(){
+		
+		BaseClass.launch_browser();
+		ActionClass.loginIntoSalesforce();
+		BaseClass.closeBrowser();
 		
 	}
 

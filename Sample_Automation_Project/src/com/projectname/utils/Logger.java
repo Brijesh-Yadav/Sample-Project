@@ -33,9 +33,9 @@ final public class Logger {
 			File logfld = new File(logfolder);
 			if (!logfld.exists()) {
 				logfld.mkdirs();
-				System.out.println("Log folder path is created!!");
+//				System.out.println("Log folder path is created!!");
 			} else {
-				System.out.println("Log folder path is already created!!");
+//				System.out.println("Log folder path is already created!!");
 			}
 			String logfilpth = logfolder + date_time + ".txt";
 			File logfile = new File(logfilpth);
@@ -177,9 +177,9 @@ final public class Logger {
 			}
 
 			if (flag != true) {
-				System.out.println("Log filepath for autoit is already created, so not creatd new file");
+//				System.out.println("Log filepath for autoit is already created, so not creatd new file");
 			} else {
-				System.out.println("New log filepath for autoit is created!!");
+//				System.out.println("New log filepath for autoit is created!!");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
