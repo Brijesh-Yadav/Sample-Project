@@ -62,26 +62,41 @@ final public class Logger {
 	}
 
 	final public static void warn(String mssg) {
+		if(logfilepath.length()==0){
+			createLogFile();
+		}
 		System.out.println("warn : " + mssg);
 		log("warn : " + mssg);
 	}
 
 	final public static void error(String mssg) {
+		if(logfilepath.length()==0){
+			createLogFile();
+		}
 		System.out.println("error : " + mssg);
 		log("error : " + mssg);
 	}
 	
 	final public static void error(String mssg, Throwable e) {
+		if(logfilepath.length()==0){
+			createLogFile();
+		}
 		System.out.println("error : " + mssg + " " + e);
 		log("error : " + mssg + " " + e);
 	}
 	
 	final public static void error(Throwable e) {
-//		System.out.println("error : "+ e);
+		if(logfilepath.length()==0){
+			createLogFile();
+		}
+		System.out.println("error : "+ e);
 		log("error : "+ e);
 	}
 
 	final public static void fatal(String mssg, Throwable e) {
+		if(logfilepath.length()==0){
+			createLogFile();
+		}
 		System.out.println("fatal : " + mssg + " " + e);
 		log("fatal : " + mssg + " " + e);
 	}
