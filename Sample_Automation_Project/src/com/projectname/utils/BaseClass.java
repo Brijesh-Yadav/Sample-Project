@@ -58,11 +58,9 @@ public class BaseClass {
 				dc = return_DesiredCapabilities_firefox();
 			//set chrome browser	
 			}else if("chrome".equalsIgnoreCase(Constants.browserName)){
-				System.setProperty("webdriver.chrome.driver", Constants.chrome_driver);
 				dc = return_DesiredCapabilities_chrome();
 			//set Internet Explorer browser	
 			}else if("ie".equalsIgnoreCase(Constants.browserName)){
-				System.setProperty("webdriver.ie.driver", Constants.ie_driver);
 				dc = return_DesiredCapabilities_ie();
 			}else {
 				Logger.warn("Browser instance not found");
@@ -119,6 +117,7 @@ public class BaseClass {
 	}
 	
 	public static WebDriver ie(){
+		System.setProperty("webdriver.ie.driver", Constants.ie_driver);
 		System.setProperty(InternetExplorerDriverService.IE_DRIVER_EXE_PROPERTY,Constants.ie_driver);
 		DesiredCapabilities capab = return_DesiredCapabilities_ie();
 		driver = new InternetExplorerDriver(capab);
@@ -148,6 +147,7 @@ public class BaseClass {
 	}
 	
 	public static DesiredCapabilities return_DesiredCapabilities_chrome(){
+		System.setProperty("webdriver.chrome.driver",Constants.chrome_driver);
 		DesiredCapabilities caps = DesiredCapabilities.chrome();
 		caps.setJavascriptEnabled(true);
         LoggingPreferences logPrefs = new LoggingPreferences();

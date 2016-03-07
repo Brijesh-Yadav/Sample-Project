@@ -2,7 +2,7 @@ package com.projectname.utils;
 
 public class Constants {
 	
-	public static String browserName = "firefox"; // chrome or firefox or ie
+	public static String browserName = "chrome"; // chrome or firefox or ie
 
 	public static String firefox = "defualt"; // default or custom
 	
