@@ -17,5 +17,7 @@ java -jar selenium-server-standalone-2.48.2.jar -role webdriver -hub http://loca
 
 More specifically: You have to start up the NODE with parameter browser and add -D parameter specifying the full path to the ChromeDriver
 
+The IP address of my node server was not routable. So i created a host entry (DNS entry as well) for the node server. and added another parameter -host
 
+java -jar selenium-server2.15.jar -role node -port 5572 -hub http://machine.name.com:5555/grid/register -browser browserName=chrome,platform=LINUX, maxInstances=5 -hubHost "machine.name.com" -host "nodemachine.name.com"
 
