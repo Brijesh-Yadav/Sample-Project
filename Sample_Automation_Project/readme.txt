@@ -17,3 +17,6 @@ java -jar selenium-server-standalone-2.48.2.jar -role webdriver -hub http://loca
 
 // IP Address : Hub machine IP address
 java -jar selenium-server-standalone-2.48.2.jar -role node -hub http://hubmachine-IP:4444/grid/register
+
+
+java -jar selenium-server-standalone-2.48.2.jar -role webdriver -hub http://hubmachine-IP:4444/grid/register -browser browserName="firefox",version=ANY,platform=WINDOWS,maxInstances=5
