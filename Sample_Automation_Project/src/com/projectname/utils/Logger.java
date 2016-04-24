@@ -130,7 +130,9 @@ final public class Logger {
 			File folder_chk = new File(path);
 			
 			if(!folder_chk.exists()){
-				System.out.println(path+" folder does not exist");
+				System.out.println(path+" folder does not exist !! So creating new folder.. ");
+				folder_chk.mkdirs();
+	
 			}
 			
 			// create logfile path for generic function
