@@ -3,6 +3,7 @@ For Parallel execution, need to start only selenium server using below command
 
 --> Enter the folder where the below jar is availabel and then execute the below command. selenium server will get start
 -->java -jar selenium-server-standalone-2.48.2.jar
+--> Do the changes with your suite.xml file (<suite thread-count="4" name="Suite" parallel="classes">)
 
 //For remotely execution
 //Run selenium grid server
