@@ -10,10 +10,10 @@ import java.util.TimeZone;
 
 final public class Logger {
 	
-	public static String currPrjDirpath = System.getProperty("user.dir"); //To get current directory path
-	public static String logfilepath = "";
+	private static String currPrjDirpath = System.getProperty("user.dir"); //To get current directory path
+	private static String logfilepath = "";
 	
-	final public static void createLogFile() {
+	final private static void createLogFile() {
 		try {
 			
 			DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd");
@@ -102,7 +102,7 @@ final public class Logger {
 	}
 
 	// Creates log 
-	public static void log(String loddata) {
+	private static void log(String loddata) {
 		try {
 			String filpath = logfilepath;
 //			System.out.println(" file path :: "+filpath);
@@ -121,7 +121,7 @@ final public class Logger {
 		}
 	}
 	
-	public static void createlog_filepath_forautoit(String logfilepath) {
+	private static void createlog_filepath_forautoit(String logfilepath) {
 		try {
 			String path = currPrjDirpath + File.separator
 					+ "resources" + File.separator + "autoit" + File.separator
